@@ -16,9 +16,9 @@ public class Main implements SerialDataReceivedListener
 		while (true)
 		{
 			arduinoSerialIO.sendCommand(ALERT_0, 0);
-			Thread.sleep(5000);
+			Thread.sleep(1000);
 			arduinoSerialIO.sendCommand(ALERT_0, 100);
-			Thread.sleep(5000);
+			Thread.sleep(1000);
 		}
 	}
 	
