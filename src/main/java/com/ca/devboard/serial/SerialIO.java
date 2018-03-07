@@ -4,7 +4,6 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -13,8 +12,6 @@ import java.io.OutputStream;
  */
 public class SerialIO implements SerialPortEventListener
 {
-	private static final int COMMAND_DIGITAL_WRITE = 0;
-	
 	private final SerialPort serialPort;
 	
 	/**
@@ -40,17 +37,10 @@ public class SerialIO implements SerialPortEventListener
 		this.output = output;
 	}
 	
-	public void digitalWrite(int pin, Level level) throws IOException
+	public void sendCommand(int alertId, int alertLevel) throws IOException
 	{
-		output.write(COMMAND_DIGITAL_WRITE);
-		output.write(pin);
-		output.write(level.toInt());
-		output.flush();
-	}
-	
-	public void writeChar(char c) throws IOException
-	{
-		output.write(c);
+		output.write(alertId);
+		output.write(alertLevel);
 		output.flush();
 	}
 	

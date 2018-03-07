@@ -2,20 +2,23 @@ package com.ca.devboard.serial;
 
 import java.io.IOException;
 
+/**
+ * Example of how to use the library
+ */
 public class Main implements SerialDataReceivedListener
 {
+	private static final int ALERT_0 = 0;
+	
 	public Main() throws InterruptedException, IOException
 	{
 		SerialIO arduinoSerialIO = SerialConnection.connect(9600, this);
 
 		while (true)
 		{
-			arduinoSerialIO.digitalWrite(2, Level.LOW);
-			arduinoSerialIO.digitalWrite(3, Level.LOW);
+			arduinoSerialIO.sendCommand(ALERT_0, 0);
 			Thread.sleep(5000);
-			arduinoSerialIO.digitalWrite(2, Level.HIGH);
-			arduinoSerialIO.digitalWrite(3, Level.LOW);
-			Thread.sleep(2000);
+			arduinoSerialIO.sendCommand(ALERT_0, 100);
+			Thread.sleep(5000);
 		}
 	}
 	
