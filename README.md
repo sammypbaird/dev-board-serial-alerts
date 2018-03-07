@@ -2,6 +2,7 @@
 
 A sample arduino application to communicate with the java application:
 
+```
 void setup() 
 {
   // Start the hardware serial port
@@ -32,4 +33,4 @@ void loop()
     Serial.flush();
   }
 }
-
+```
