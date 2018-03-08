@@ -1,11 +1,11 @@
 package com.ca.devboard.serial;
 
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import purejavacomm.SerialPort;
+import purejavacomm.SerialPortEvent;
+import purejavacomm.SerialPortEventListener;
 
 /**
  * Contains the methods to read and write to the serial connection.

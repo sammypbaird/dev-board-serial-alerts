@@ -1,9 +1,5 @@
 package com.ca.devboard.serial;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.UnsupportedCommOperationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.TooManyListenersException;
+import purejavacomm.CommPortIdentifier;
+import purejavacomm.PortInUseException;
+import purejavacomm.SerialPort;
+import purejavacomm.UnsupportedCommOperationException;
 
 /**
  * Encapsulates all the logic needed to connect to the Arduino through the serial port. You must call initialize before
@@ -22,10 +22,6 @@ public class SerialConnection
 	 * Milliseconds to block while waiting for port open
 	 */
 	private static final int TIME_OUT = 2000;
-	static
-	{
-		DllLoader.loadLibrary();
-	}
 
 	public static SerialIO connect(int baudRate, SerialDataReceivedListener serialDataReceivedListener)
 	{
