@@ -5,7 +5,6 @@ import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
@@ -25,7 +24,14 @@ public class SerialConnection
 		"/dev/tty.usbserial-A9007UX1", // Mac OS X
 		"/dev/ttyACM0", // Raspberry Pi
 		"/dev/ttyUSB0", // Linux
-		"COM6"
+		"COM1",
+		"COM2",
+		"COM3",
+		"COM4",
+		"COM5",
+		"COM6",
+		"COM7",
+		"COM8"
 	};
 	
 	/**
@@ -35,7 +41,7 @@ public class SerialConnection
 	
 	public static SerialIO connect(int baudRate, SerialDataReceivedListener serialDataReceivedListener)
 	{
-	
+		DllLoader.loadLibrary();
 		CommPortIdentifier portId = null;
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
