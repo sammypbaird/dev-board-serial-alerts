@@ -25,6 +25,7 @@ public class SerialConnection
 
 	public static SerialIO connect(int baudRate, SerialDataReceivedListener serialDataReceivedListener)
 	{
+		DllLoader.loadLibrary();
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 		List<CommPortIdentifier> foundSerialPorts = new ArrayList<>();
 		while (portEnum.hasMoreElements())
