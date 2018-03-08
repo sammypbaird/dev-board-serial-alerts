@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.time.Duration;
+import java.util.TooManyListenersException;
 import purejavacomm.SerialPort;
 import purejavacomm.SerialPortEvent;
 import purejavacomm.SerialPortEventListener;
@@ -38,6 +39,16 @@ public class SerialIO implements SerialPortEventListener
 	{
 		this.baudRate = baudRate;
 		this.serialDataReceivedListener = serialDataReceivedListener;
+	}
+
+	public SerialIO(int baudRate)
+	{
+		this(baudRate, null);
+	}
+
+	public SerialIO()
+	{
+		this(9600);
 	}
 
 	public void sendCommand(int alertId, int alertLevel) throws IOException, InterruptedException
@@ -76,6 +87,14 @@ public class SerialIO implements SerialPortEventListener
 			}
 			input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 			output = serialPort.getOutputStream();
+			try
+			{
+				serialPort.addEventListener(this);
+			}
+			catch (TooManyListenersException ex)
+			{
+				throw new IllegalArgumentException("Failed to setup serial event listener", ex);
+			}
 			break;
 		}
 	}
@@ -103,7 +122,8 @@ public class SerialIO implements SerialPortEventListener
 		{
 			try
 			{
-				serialDataReceivedListener.dataReceived(input.readLine());
+				if (input != null && serialDataReceivedListener != null)
+					serialDataReceivedListener.dataReceived(input.readLine());
 			}
 			catch (Exception e)
 			{
