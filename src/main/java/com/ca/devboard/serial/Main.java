@@ -21,7 +21,7 @@ public class Main implements SerialDataReceivedListener
 			Thread.sleep(1000);
 		}
 	}
-	
+
 	@Override
 	public void dataReceived(String string)
 	{
