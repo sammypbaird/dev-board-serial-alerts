@@ -1,12 +1,8 @@
 package com.ca.devboard.serial;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.TooManyListenersException;
 import purejavacomm.CommPortIdentifier;
 import purejavacomm.PortInUseException;
 import purejavacomm.SerialPort;
@@ -23,7 +19,7 @@ public class SerialConnection
 	 */
 	private static final int TIME_OUT = 2000;
 
-	public static SerialIO connect(int baudRate, SerialDataReceivedListener serialDataReceivedListener)
+	public static SerialPort connect(int baudRate)
 	{
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 		List<CommPortIdentifier> foundSerialPorts = new ArrayList<>();
@@ -50,16 +46,11 @@ public class SerialConnection
 											   SerialPort.DATABITS_8,
 											   SerialPort.STOPBITS_1,
 											   SerialPort.PARITY_NONE);
-
-				// open the streams
-				BufferedReader input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-
-				SerialIO arduinoSerialIO = new SerialIO(serialPort, serialDataReceivedListener, input, serialPort.getOutputStream());
-				serialPort.addEventListener(arduinoSerialIO);
+				
 				System.out.println("Connected to Port " + portId.getName());
-				return arduinoSerialIO;
+				return serialPort;
 			}
-			catch (PortInUseException | UnsupportedCommOperationException | IOException | TooManyListenersException e)
+			catch (PortInUseException | UnsupportedCommOperationException e)
 			{
 				System.out.println(String.format("Unable to connect to %s: %s", portId.getName(), e.getLocalizedMessage()));
 			}

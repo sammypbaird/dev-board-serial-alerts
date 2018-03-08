@@ -2,7 +2,9 @@ package com.ca.devboard.serial;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.time.Duration;
 import purejavacomm.SerialPort;
 import purejavacomm.SerialPortEvent;
 import purejavacomm.SerialPortEventListener;
@@ -12,7 +14,10 @@ import purejavacomm.SerialPortEventListener;
  */
 public class SerialIO implements SerialPortEventListener
 {
-	private final SerialPort serialPort;
+	private static final long RECONNECT_SEC = 2;
+
+	private SerialPort serialPort = null;
+	private final int baudRate;
 	
 	/**
 	 * Receives messages from serial
@@ -23,25 +28,56 @@ public class SerialIO implements SerialPortEventListener
 	 * A BufferedReader which will be fed by a InputStreamReader converting the
 	 * bytes into characters making the displayed results codepage independent
 	 */
-	private final BufferedReader input;
+	private BufferedReader input = null;
 	/**
 	 * The output stream to the port
 	 */
-	private final OutputStream output;
+	private OutputStream output = null;
 
-	public SerialIO(SerialPort serialPort, SerialDataReceivedListener serialDataReceivedListener, BufferedReader input, OutputStream output)
+	public SerialIO(int baudRate, SerialDataReceivedListener serialDataReceivedListener)
 	{
-		this.serialPort = serialPort;
+		this.baudRate = baudRate;
 		this.serialDataReceivedListener = serialDataReceivedListener;
-		this.input = input;
-		this.output = output;
 	}
-	
-	public void sendCommand(int alertId, int alertLevel) throws IOException
+
+	public void sendCommand(int alertId, int alertLevel) throws IOException, InterruptedException
 	{
-		output.write(alertId);
-		output.write(alertLevel);
-		output.flush();
+		connect();
+		try
+		{
+			output.write(alertId);
+			output.write(alertLevel);
+			output.flush();
+		}
+		catch (Exception ex)
+		{
+			serialPort = null;
+			ex.printStackTrace();
+			Thread.sleep(Duration.ofSeconds(5).toMillis());
+		}
+	}
+
+	private void connect() throws InterruptedException, IOException
+	{
+		if (serialPort != null)
+			return;
+		System.out.println("Serial port connection not established. Attempting to connect...");
+		while (true)
+		{
+			try
+			{
+				serialPort = SerialConnection.connect(baudRate);
+			}
+			catch (Exception ex)
+			{
+				System.out.println(String.format("Unable to connect: %s. Trying again in %d seconds",
+												 ex.getLocalizedMessage(), RECONNECT_SEC));
+				Thread.sleep(Duration.ofSeconds(RECONNECT_SEC).toMillis());
+			}
+			input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+			output = serialPort.getOutputStream();
+			break;
+		}
 	}
 	
 	/**
