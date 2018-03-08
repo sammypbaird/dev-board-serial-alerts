@@ -40,6 +40,7 @@ public class Main implements SerialDataReceivedListener
 			}
 			catch (Exception ex)
 			{
+				arduinoSerialIO = null;
 				ex.printStackTrace();
 				Thread.sleep(Duration.ofSeconds(5).toMillis());
 			}
