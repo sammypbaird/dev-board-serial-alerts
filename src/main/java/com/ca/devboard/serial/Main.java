@@ -1,6 +1,7 @@
 package com.ca.devboard.serial;
 
 import java.io.IOException;
+import java.time.Duration;
 
 /**
  * Example of how to use the library
@@ -8,17 +9,40 @@ import java.io.IOException;
 public class Main implements SerialDataReceivedListener
 {
 	private static final int ALERT_0 = 0;
+	private static final long RECONNECT_SEC = 2;
 	
 	public Main() throws InterruptedException, IOException
 	{
-		SerialIO arduinoSerialIO = SerialConnection.connect(9600, this);
+		SerialIO arduinoSerialIO = null;
 
 		while (true)
 		{
-			arduinoSerialIO.sendCommand(ALERT_0, 0);
-			Thread.sleep(1000);
-			arduinoSerialIO.sendCommand(ALERT_0, 100);
-			Thread.sleep(1000);
+			if (arduinoSerialIO == null)
+			{
+				try
+				{
+					arduinoSerialIO = SerialConnection.connect(9600, this);
+				}
+				catch (Exception ex)
+				{
+					System.out.println(String.format("Unable to connect: %s. Trying again in %d seconds",
+													 ex.getLocalizedMessage(), RECONNECT_SEC));
+					Thread.sleep(Duration.ofSeconds(RECONNECT_SEC).toMillis());
+					continue;
+				}
+			}
+			try
+			{
+				arduinoSerialIO.sendCommand(ALERT_0, 0);
+				Thread.sleep(1000);
+				arduinoSerialIO.sendCommand(ALERT_0, 100);
+				Thread.sleep(1000);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+				Thread.sleep(Duration.ofSeconds(5).toMillis());
+			}
 		}
 	}
 	

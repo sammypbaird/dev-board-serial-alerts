@@ -22,10 +22,13 @@ public class SerialConnection
 	 * Milliseconds to block while waiting for port open
 	 */
 	private static final int TIME_OUT = 2000;
+	static
+	{
+		DllLoader.loadLibrary();
+	}
 
 	public static SerialIO connect(int baudRate, SerialDataReceivedListener serialDataReceivedListener)
 	{
-		DllLoader.loadLibrary();
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 		List<CommPortIdentifier> foundSerialPorts = new ArrayList<>();
 		while (portEnum.hasMoreElements())
