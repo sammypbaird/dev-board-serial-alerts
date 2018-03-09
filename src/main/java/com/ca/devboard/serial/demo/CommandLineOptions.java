@@ -84,7 +84,9 @@ public class CommandLineOptions
 		DATABASE_CPU_MOCK("db-mock"),
 		JIRA("jira"),
 		RANDOM("random"),
-		ON_OFF("onoff");
+		ON_OFF("onoff"),
+		PROGRESSION("progression")
+		;
 		
 		private final String name;
 		

@@ -35,6 +35,9 @@ public class Main implements SerialDataReceivedListener
 			case ON_OFF:
 				TestAlert.onOff(serialIo);
 				break;
+			case PROGRESSION:
+				TestAlert.progression(serialIo);
+				break;
 			default:
 				break;
 		}

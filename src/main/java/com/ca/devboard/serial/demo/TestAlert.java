@@ -36,4 +36,16 @@ public class TestAlert
 			Thread.sleep(4000);
 		}
 	}
+
+	public static void progression(SerialIO serialIo) throws IOException, InterruptedException
+	{
+		int level = 0;
+		while (true)
+		{
+			sendCommand(serialIo, 0, level);
+			Thread.sleep(1000);
+			level += 25;
+			level = level > 100 ? 0 : level;
+		}
+	}
 }
