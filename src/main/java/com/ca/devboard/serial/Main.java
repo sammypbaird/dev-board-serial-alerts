@@ -11,7 +11,7 @@ public class Main implements SerialDataReceivedListener
 	
 	public Main() throws InterruptedException, IOException
 	{
-		SerialIO serialIO = new SerialIO(9600, null, this);
+		SerialIO serialIO = SerialIO.builder().serialDataReceivedListener(this).build();
 
 		while (true)
 		{

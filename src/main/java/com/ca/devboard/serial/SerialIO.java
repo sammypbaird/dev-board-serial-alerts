@@ -18,8 +18,8 @@ public class SerialIO implements SerialPortEventListener
 	private static final long RECONNECT_SEC = 2;
 
 	private SerialPort serialPort = null;
-	private final int baudRate;
-	private String comPort;
+	private int baudRate = 9600;
+	private String comPort = null;
 	
 	/**
 	 * Receives messages from serial
@@ -36,6 +36,9 @@ public class SerialIO implements SerialPortEventListener
 	 */
 	private OutputStream output = null;
 	
+	/**
+	 * If you want to use defaults for some, use the builder() method to create a SerialIO.
+	 */
 	public SerialIO(int baudRate, String comPort, SerialDataReceivedListener serialDataReceivedListener)
 	{
 		this.baudRate = baudRate;
@@ -43,19 +46,9 @@ public class SerialIO implements SerialPortEventListener
 		this.serialDataReceivedListener = serialDataReceivedListener;
 	}
 
-	public SerialIO(int baudRate, SerialDataReceivedListener serialDataReceivedListener)
+	public static SerialIOBuilder builder()
 	{
-		this(baudRate, null, serialDataReceivedListener);
-	}
-
-	public SerialIO(int baudRate)
-	{
-		this(baudRate, null);
-	}
-
-	public SerialIO()
-	{
-		this(9600);
+		return new SerialIOBuilder();
 	}
 
 	public void sendCommand(int alertId, int alertLevel) throws IOException, InterruptedException
