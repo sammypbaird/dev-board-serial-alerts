@@ -17,23 +17,23 @@ public class Main implements SerialDataReceivedListener
 	public void start() throws InterruptedException, IOException
 	{
 		serialIo = SerialIO.builder().comPort(cli.getComPort()).serialDataReceivedListener(this).build();
-		if (cli.getType() == CommandLineOptions.Type.DATABASE_CPU)
+		if (cli.getType() == CommandLineOptions.DemoType.DATABASE_CPU)
 		{
 			new GraphiteAlert().run(serialIo, false);
 		}
-		else if (cli.getType() == CommandLineOptions.Type.DATABASE_CPU_MOCK)
+		else if (cli.getType() == CommandLineOptions.DemoType.DATABASE_CPU_MOCK)
 		{
 			new GraphiteAlert().run(serialIo, true);
 		}
-		else if (cli.getType() == CommandLineOptions.Type.JIRA)
+		else if (cli.getType() == CommandLineOptions.DemoType.JIRA)
 		{
 			new JiraCaseCountAlert().run(serialIo);
 		}
-		else if (cli.getType() == CommandLineOptions.Type.RANDOM)
+		else if (cli.getType() == CommandLineOptions.DemoType.RANDOM)
 		{
 			new TestAlert().randomValues(serialIo, 0);
 		}
-		else if (cli.getType() == CommandLineOptions.Type.ON_OFF)
+		else if (cli.getType() == CommandLineOptions.DemoType.ON_OFF)
 		{
 			new TestAlert().onOff(serialIo, 0);
 		}
