@@ -11,7 +11,7 @@ public class CommandLineOptions
 {
 	private final String[] args;
 	private final Options options = new Options();
-	private Type type = Type.DATABASE_CPU;
+	private DemoType type = DemoType.DATABASE_CPU;
 	private String comPort;
 
 	public CommandLineOptions(String[] args)
@@ -19,11 +19,11 @@ public class CommandLineOptions
 		this.args = args;
 		options.addOption("h", "help", false, "show help.");
 		options.addOption("c", "comPort", true, "If specified, it will use this COM port instead of attaching to the first available one");
-		options.addOption("t", "type", true, "The type of alert you want to do (db, db-mock, random, onoff");
+		options.addOption("t", "type", true, "The type of demo you want to perform (" + DemoType.allTypesToString() + ")");
 
 	}
 	
-	public Type getType()
+	public DemoType getType()
 	{
 		return type;
 	}
@@ -53,19 +53,10 @@ public class CommandLineOptions
 			if (cmd.hasOption("t"))
 			{
 				String t = cmd.getOptionValue("t");
-				if (t.equalsIgnoreCase("db"))
-					type = Type.DATABASE_CPU;
-				else if (t.equalsIgnoreCase("db-mock"))
-					type = Type.DATABASE_CPU_MOCK;
-				else if (t.equalsIgnoreCase("random"))
-					type = Type.RANDOM;
-				else if (t.equalsIgnoreCase("jira"))
-					type = Type.JIRA;
-				else if (t.equalsIgnoreCase("onoff"))
-					type = Type.ON_OFF;
-				else
+				type = DemoType.fromName(t);
+				if (type == null)
 				{
-					System.out.println("Type \"" + t + "\" not understood. Allowed types: db, db-mock, jira, random, onoff");
+					System.out.println("Type \"" + t + "\" not understood. Allowed types: " + DemoType.allTypesToString());
 					System.exit(0);
 				}
 			}
@@ -87,12 +78,47 @@ public class CommandLineOptions
 		System.exit(0);
 	}
 
-	public enum Type
+	public enum DemoType
 	{
-		DATABASE_CPU,
-		DATABASE_CPU_MOCK,
-		JIRA,
-		RANDOM,
-		ON_OFF;
+		DATABASE_CPU("db"),
+		DATABASE_CPU_MOCK("db-mock"),
+		JIRA("jira"),
+		RANDOM("random"),
+		ON_OFF("onoff");
+		
+		private final String name;
+		
+		DemoType(String option)
+		{
+			this.name = option;
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+		
+		public static DemoType fromName(String name)
+		{
+			for (DemoType type : DemoType.values())
+			{
+				if (type.getName().equalsIgnoreCase(name))
+					return type;
+			}
+			return null;
+		}
+		
+		public static String allTypesToString()
+		{
+			StringBuilder sb = new StringBuilder();
+			DemoType[] demoTypes = DemoType.values();
+			for (int i=0; i<demoTypes.length; i++)
+			{
+				sb.append(demoTypes[i].getName());
+				if (i < demoTypes.length - 1)
+					sb.append(", ");
+			}
+			return sb.toString();
+		}
 	}
 }
