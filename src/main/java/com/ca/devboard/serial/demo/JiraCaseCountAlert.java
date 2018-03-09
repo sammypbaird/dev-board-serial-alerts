@@ -33,6 +33,7 @@ public class JiraCaseCountAlert
 		{
 			int numUnassignedOpenCases = getNumUnassignedOpenCases("LABS");
 			int numUnassignedCriticalCases = getNumUnassignedCriticalCases("LABS");
+			System.out.printf("%d unassigned open cases. %d unassigned criticals.%n", numUnassignedOpenCases, numUnassignedCriticalCases);
 
 			try
 			{
@@ -41,20 +42,20 @@ public class JiraCaseCountAlert
 			}
 			catch (IOException ex)
 			{
-				Logger.getLogger(JiraCaseCountAlert.class.getName()).log(Level.SEVERE, null, ex);
+				LOG.log(Level.SEVERE, null, ex);
 			}
 			Thread.sleep(5000);
 		}
 	}
-	
+
 	public static int getNumUnassignedOpenCases(String projectName)
 	{
-		return runQuery(String.format("project=%s AND status in (Open, Ready, Acknowledged) AND assignee=EMPTY", projectName));
+		return runQuery(String.format("project=%s AND status in (PROPOSED, Open, Ready, Acknowledged) AND assignee=EMPTY", projectName));
 	}
 
 	public static int getNumUnassignedCriticalCases(String projectName)
 	{
-		return runQuery(String.format("project=%s AND status in (Open, Ready, Acknowledged) AND priority = Critical AND assignee=EMPTY", projectName));
+		return runQuery(String.format("project=%s AND status in (PROPOSED, Open, Ready, Acknowledged) AND priority = Critical AND assignee=EMPTY", projectName));
 	}
 
 	private static int runQuery(String jqlQuery)
