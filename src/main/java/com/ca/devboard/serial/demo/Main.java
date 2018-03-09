@@ -30,12 +30,10 @@ public class Main implements SerialDataReceivedListener
 				JiraCaseCountAlert.runDemo(serialIo);
 				break;
 			case RANDOM:
-				TestAlert.randomValues(serialIo, 0);
-				TestAlert.randomValues(serialIo, 1);
+				TestAlert.randomValues(serialIo);
 				break;
 			case ON_OFF:
-				TestAlert.onOff(serialIo, 0);
-				TestAlert.onOff(serialIo, 1);
+				TestAlert.onOff(serialIo);
 				break;
 			default:
 				break;
