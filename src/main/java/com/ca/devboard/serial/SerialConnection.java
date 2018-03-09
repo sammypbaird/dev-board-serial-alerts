@@ -19,7 +19,7 @@ public class SerialConnection
 	 */
 	private static final int TIME_OUT = 2000;
 
-	public static SerialPort connect(int baudRate)
+	public static SerialPort connect(int baudRate, String comPort)
 	{
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 		List<CommPortIdentifier> foundSerialPorts = new ArrayList<>();
@@ -31,24 +31,32 @@ public class SerialConnection
 			System.out.println("Found serial port: " + currPortId.getName());
 			foundSerialPorts.add(currPortId);
 		}
+		if (comPort != null)
+		{
+			System.out.println("Attaching to specified COM port \"" + comPort + "\"");
+		}
 		for (CommPortIdentifier portId : foundSerialPorts)
 		{
 			try
 			{
-				// open serial port, and use class name for the appName.
-				SerialPort serialPort = (SerialPort)portId.open(SerialConnection.class.getName(), TIME_OUT);
-				serialPort.disableReceiveTimeout();
-				serialPort.enableReceiveThreshold(1);
-				serialPort.notifyOnDataAvailable(true);
+				//if you provide a specified com port, use that
+				if (comPort == null || comPort.equalsIgnoreCase(portId.getName()))
+				{
+					// open serial port, and use class name for the appName.
+					SerialPort serialPort = (SerialPort)portId.open(SerialConnection.class.getName(), TIME_OUT);
+					serialPort.disableReceiveTimeout();
+					serialPort.enableReceiveThreshold(1);
+					serialPort.notifyOnDataAvailable(true);
 
-				// set port parameters
-				serialPort.setSerialPortParams(baudRate,
-											   SerialPort.DATABITS_8,
-											   SerialPort.STOPBITS_1,
-											   SerialPort.PARITY_NONE);
-				
-				System.out.println("Connected to Port " + portId.getName());
-				return serialPort;
+					// set port parameters
+					serialPort.setSerialPortParams(baudRate,
+												   SerialPort.DATABITS_8,
+												   SerialPort.STOPBITS_1,
+												   SerialPort.PARITY_NONE);
+
+					System.out.println("Connected to Port " + portId.getName());
+					return serialPort;
+				}
 			}
 			catch (PortInUseException | UnsupportedCommOperationException e)
 			{
@@ -56,6 +64,7 @@ public class SerialConnection
 			}
 		}
 
-		throw new IllegalArgumentException("Could not any serial COM ports!");
+		String message = comPort == null ? "Could not find any serial COM ports!" : "Specified COM port not available";
+		throw new IllegalArgumentException(message);
 	}
 }

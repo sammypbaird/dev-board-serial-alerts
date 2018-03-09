@@ -18,7 +18,8 @@ public class SerialIO implements SerialPortEventListener
 	private static final long RECONNECT_SEC = 2;
 
 	private SerialPort serialPort = null;
-	private final int baudRate;
+	private int baudRate = 9600;
+	private String comPort = null;
 	
 	/**
 	 * Receives messages from serial
@@ -34,21 +35,20 @@ public class SerialIO implements SerialPortEventListener
 	 * The output stream to the port
 	 */
 	private OutputStream output = null;
-
-	public SerialIO(int baudRate, SerialDataReceivedListener serialDataReceivedListener)
+	
+	/**
+	 * If you want to use defaults for some, use the builder() method to create a SerialIO.
+	 */
+	public SerialIO(int baudRate, String comPort, SerialDataReceivedListener serialDataReceivedListener)
 	{
 		this.baudRate = baudRate;
+		this.comPort = comPort;
 		this.serialDataReceivedListener = serialDataReceivedListener;
 	}
 
-	public SerialIO(int baudRate)
+	public static SerialIOBuilder builder()
 	{
-		this(baudRate, null);
-	}
-
-	public SerialIO()
-	{
-		this(9600);
+		return new SerialIOBuilder();
 	}
 
 	public void sendCommand(int alertId, int alertLevel) throws IOException, InterruptedException
@@ -77,7 +77,18 @@ public class SerialIO implements SerialPortEventListener
 		{
 			try
 			{
-				serialPort = SerialConnection.connect(baudRate);
+				serialPort = SerialConnection.connect(baudRate, comPort);
+				input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+				output = serialPort.getOutputStream();
+				try
+				{
+					serialPort.addEventListener(this);
+				}
+				catch (TooManyListenersException ex)
+				{
+					throw new IllegalArgumentException("Failed to setup serial event listener", ex);
+				}
+				break;
 			}
 			catch (Exception ex)
 			{
@@ -85,17 +96,7 @@ public class SerialIO implements SerialPortEventListener
 												 ex.getLocalizedMessage(), RECONNECT_SEC));
 				Thread.sleep(Duration.ofSeconds(RECONNECT_SEC).toMillis());
 			}
-			input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-			output = serialPort.getOutputStream();
-			try
-			{
-				serialPort.addEventListener(this);
-			}
-			catch (TooManyListenersException ex)
-			{
-				throw new IllegalArgumentException("Failed to setup serial event listener", ex);
-			}
-			break;
+			
 		}
 	}
 	
