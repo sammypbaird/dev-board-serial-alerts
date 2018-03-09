@@ -27,7 +27,7 @@ public class Main implements SerialDataReceivedListener
 				GraphiteAlert.run(serialIo, true);
 				break;
 			case JIRA:
-				JiraCaseCountAlert.run(serialIo);
+				JiraCaseCountAlert.runDemo(serialIo);
 				break;
 			case RANDOM:
 				TestAlert.randomValues(serialIo, 0);
