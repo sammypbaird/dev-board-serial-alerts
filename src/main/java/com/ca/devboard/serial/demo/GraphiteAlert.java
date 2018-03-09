@@ -31,7 +31,7 @@ public class GraphiteAlert
 	private static GraphiteMetric getLatestDatabaseCpu(boolean mocked)
 	{
 		String host = mocked ? "dev-ip-integ-mockshine-app1:8084/graphite" : "graphite";
-		String targetConfig = "highestCurrent(SQLServers.Production.%7Bboi-recondb%2Cboi-reportdb%2Cboi-mssql-db3%7D.OS.Processor%3APercentTotal%2C1)";
+		String targetConfig = "highestCurrent(SQLServers.Production.%7Bboi-recondb%7D.OS.Processor%3APercentTotal%2C1)";
 		String url = "http://" + host + "/render?from=-2mins&until=now"
 				+ "&target=" + targetConfig
 				+ ".OS.Processor%3APercentTotal&format=json";
