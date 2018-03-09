@@ -25,7 +25,7 @@ public class JiraCaseCountAlert
 	private static final String JIRA_API_SEARCH_PATH = "https://jira.arbfund.com/rest/api/2/search";
 	private static final String AUTH_HEADER = buildBasicAuthHeader(System.getenv("CWUSER"), System.getenv("CWPASS"));
 
-	public void run(SerialIO serialIO) throws InterruptedException
+	public static void run(SerialIO serialIO) throws InterruptedException
 	{
 		SerialIO serialIo = SerialIO.builder().build();
 

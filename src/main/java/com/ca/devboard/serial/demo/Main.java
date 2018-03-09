@@ -17,27 +17,29 @@ public class Main implements SerialDataReceivedListener
 	public void start() throws InterruptedException, IOException
 	{
 		serialIo = SerialIO.builder().comPort(cli.getComPort()).serialDataReceivedListener(this).build();
-		if (cli.getType() == CommandLineOptions.Type.DATABASE_CPU)
+		if (null != cli.getType())
+		switch (cli.getType())
 		{
-			new GraphiteAlert().run(serialIo, false);
+			case DATABASE_CPU:
+				GraphiteAlert.run(serialIo, false);
+				break;
+			case DATABASE_CPU_MOCK:
+				GraphiteAlert.run(serialIo, true);
+				break;
+			case JIRA:
+				JiraCaseCountAlert.run(serialIo);
+				break;
+			case RANDOM:
+				TestAlert.randomValues(serialIo, 0);
+				TestAlert.randomValues(serialIo, 1);
+				break;
+			case ON_OFF:
+				TestAlert.onOff(serialIo, 0);
+				TestAlert.onOff(serialIo, 1);
+				break;
+			default:
+				break;
 		}
-		else if (cli.getType() == CommandLineOptions.Type.DATABASE_CPU_MOCK)
-		{
-			new GraphiteAlert().run(serialIo, true);
-		}
-		else if (cli.getType() == CommandLineOptions.Type.JIRA)
-		{
-			new JiraCaseCountAlert().run(serialIo);
-		}
-		else if (cli.getType() == CommandLineOptions.Type.RANDOM)
-		{
-			new TestAlert().randomValues(serialIo, 0);
-		}
-		else if (cli.getType() == CommandLineOptions.Type.ON_OFF)
-		{
-			new TestAlert().onOff(serialIo, 0);
-		}
-
 	}
 	
 	@Override
