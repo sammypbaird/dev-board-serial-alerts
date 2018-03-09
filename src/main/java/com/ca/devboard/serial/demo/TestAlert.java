@@ -19,10 +19,10 @@ public class TestAlert
 		while (true)
 		{
 			sendCommand(serialIo, 0, 100);
-			sendCommand(serialIo, 1, 0);
+			sendCommand(serialIo, 1, 100);
 			Thread.sleep(4000);
 			sendCommand(serialIo, 0, 0);
-			sendCommand(serialIo, 1, 100);
+			sendCommand(serialIo, 1, 0);
 			Thread.sleep(4000);
 		}
 	}
