@@ -26,7 +26,7 @@ public class JiraCaseCount
 
 	public static void main(String[] args) throws InterruptedException
 	{
-		SerialIO serialIo = new SerialIO();
+		SerialIO serialIo = SerialIO.builder().build();
 
 		while (true)
 		{
