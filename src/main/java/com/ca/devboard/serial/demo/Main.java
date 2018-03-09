@@ -37,6 +37,8 @@ public class Main implements SerialDataReceivedListener
 				break;
 			case TIMER:
 				TimerAlert.start(serialIo);
+			case PROGRESSION:
+				TestAlert.progression(serialIo);
 				break;
 			default:
 				break;

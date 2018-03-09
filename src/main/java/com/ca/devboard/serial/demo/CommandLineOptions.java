@@ -85,7 +85,8 @@ public class CommandLineOptions
 		JIRA("jira"),
 		RANDOM("random"),
 		ON_OFF("onoff"),
-		TIMER("timer");
+		TIMER("timer"),
+		PROGRESSION("progression");
 		
 		private final String name;
 		
