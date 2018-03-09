@@ -13,11 +13,10 @@ import org.apache.http.impl.client.HttpClients;
 
 public class GraphiteAlert
 {
+	private static final ObjectMapper MAPPER = new ObjectMapper();
+	private static final CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
 
-	private ObjectMapper mapper = new ObjectMapper();
-	private CloseableHttpClient httpclient = HttpClients.createDefault();
-
-	public void run(SerialIO serialIo, boolean mocked) throws IOException, InterruptedException
+	public static void run(SerialIO serialIo, boolean mocked) throws IOException, InterruptedException
 	{
 		GraphiteAlert graphiteLoader = new GraphiteAlert();
 		while (true)
@@ -29,7 +28,7 @@ public class GraphiteAlert
 		}
 	}
 
-	private GraphiteMetric getLatestDatabaseCpu(boolean mocked)
+	private static GraphiteMetric getLatestDatabaseCpu(boolean mocked)
 	{
 		String host = mocked ? "dev-ip-integ-mockshine-app1:8084/graphite" : "graphite";
 		String targetConfig = "highestCurrent(SQLServers.Production.%7Bboi-recondb%2Cboi-reportdb%2Cboi-mssql-db3%7D.OS.Processor%3APercentTotal%2C1)";
@@ -38,9 +37,9 @@ public class GraphiteAlert
 				+ ".OS.Processor%3APercentTotal&format=json";
 
 		HttpGet httpGet = new HttpGet(url);
-		try (CloseableHttpResponse response = httpclient.execute(httpGet))
+		try (CloseableHttpResponse response = HTTP_CLIENT.execute(httpGet))
 		{
-			List<Map<String, Object>> data = mapper.readValue(response.getEntity().getContent(), new TypeReference<List<Map<String, Object>>>()
+			List<Map<String, Object>> data = MAPPER.readValue(response.getEntity().getContent(), new TypeReference<List<Map<String, Object>>>()
 			{
 			});
 			if (data.isEmpty())

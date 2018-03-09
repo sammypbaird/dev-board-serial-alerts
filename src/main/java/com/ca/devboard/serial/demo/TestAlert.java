@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class TestAlert 
 {
-	private Random random = new Random();
+	private static final Random RANDOM = new Random();
 	
-	public void onOff(SerialIO serialIo, int alertId) throws InterruptedException, IOException
+	public static void onOff(SerialIO serialIo, int alertId) throws InterruptedException, IOException
 	{
 		while (true)
 		{
@@ -21,11 +21,11 @@ public class TestAlert
 		}
 	}
 	
-	public void randomValues(SerialIO serialIo, int alertId) throws InterruptedException, IOException
+	public static void randomValues(SerialIO serialIo, int alertId) throws InterruptedException, IOException
 	{
 		while (true)
 		{
-			int level = random.nextInt(100);
+			int level = RANDOM.nextInt(100);
 			serialIo.sendCommand(alertId, level);
 			System.out.println("Alert " + alertId + ", level " + level);
 			Thread.sleep(4000);
