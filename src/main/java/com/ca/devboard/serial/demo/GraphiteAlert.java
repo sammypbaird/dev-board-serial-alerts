@@ -23,7 +23,7 @@ public class GraphiteAlert
 		{
 			GraphiteMetric graphiteMetric = graphiteLoader.getLatestDatabaseCpu(mocked);
 			System.out.println("Database " + graphiteMetric.getTarget() + " CPU: " + graphiteMetric.getValue());
-			serialIo.sendCommand(0, (int) graphiteMetric.getValue());
+			serialIo.sendAlert(0, (int) graphiteMetric.getValue());
 			Thread.sleep(2000);
 		}
 	}

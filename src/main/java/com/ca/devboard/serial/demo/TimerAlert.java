@@ -8,16 +8,16 @@ public class TimerAlert
 {
 	private static void on(SerialIO serialIo, long millis) throws IOException, InterruptedException
 	{
-		serialIo.sendCommand(0, 100);
-		serialIo.sendCommand(1, 100);
+		serialIo.sendAlert(0, 100);
+		serialIo.sendAlert(1, 100);
 		System.out.println("Spinner on for " + millis + " ms");
 		Thread.sleep(millis);
 	}
 	
 	private static void off(SerialIO serialIo, long millis) throws IOException, InterruptedException
 	{
-		serialIo.sendCommand(0, 0);
-		serialIo.sendCommand(1, 0);
+		serialIo.sendAlert(0, 0);
+		serialIo.sendAlert(1, 0);
 		System.out.println("Spinner off for " + millis + " ms");
 		Thread.sleep(millis);
 	}

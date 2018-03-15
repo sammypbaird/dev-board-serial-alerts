@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.Duration;
 import java.util.TooManyListenersException;
 import purejavacomm.SerialPort;
@@ -16,6 +18,7 @@ import purejavacomm.SerialPortEventListener;
 public class SerialIO implements SerialPortEventListener
 {
 	private static final long RECONNECT_SEC = 2;
+	private static final NumberFormat NUMBER_FORMAT = new DecimalFormat("0.000");
 
 	private SerialPort serialPort = null;
 	private int baudRate = 9600;
@@ -51,13 +54,65 @@ public class SerialIO implements SerialPortEventListener
 		return new SerialIOBuilder();
 	}
 
-	public void sendCommand(int alertId, int alertLevel) throws IOException, InterruptedException
+	public void sendAlert(int alertId, int alertLevel) throws IOException, InterruptedException
 	{
 		connect();
 		try
 		{
+			output.write(Command.ALERT.getId());
 			output.write(alertId);
 			output.write(alertLevel);
+			output.flush();
+		}
+		catch (Exception ex)
+		{
+			serialPort = null;
+			ex.printStackTrace();
+			Thread.sleep(Duration.ofSeconds(5).toMillis());
+		}
+	}
+	
+	/**
+	 * Send the provided number as ascii characters, limiting it to the provided number of digits.
+	 */
+	public void sendAsciiDouble(int alertId, double number, int digits) throws IOException, InterruptedException
+	{
+		connect();
+		try
+		{
+			String strNumber = NUMBER_FORMAT.format(number);
+			output.write(Command.ASCII.getId());
+			output.write(alertId);
+			//if the first 4 digits contains a period, send 5 characters, because the period will be combined with one of the digits
+			int size = strNumber.substring(0, digits).contains(".") ? digits + 1 : digits;
+			for (int i=0; i<size; i++)
+			{
+				output.write(strNumber.charAt(i));
+			}
+			output.write(0);
+			output.flush();
+		}
+		catch (Exception ex)
+		{
+			serialPort = null;
+			ex.printStackTrace();
+			Thread.sleep(Duration.ofSeconds(5).toMillis());
+		}
+	}
+	
+	public void sendAsciiString(int alertId, String string) throws IOException, InterruptedException
+	{
+		connect();
+		try
+		{
+			output.write(Command.ASCII.getId());
+			output.write(alertId);
+			for (int i=0; i<string.length(); i++)
+			{
+				char c = Character.toUpperCase(string.charAt(i));
+				output.write(c);
+			}
+			output.write(0);
 			output.flush();
 		}
 		catch (Exception ex)

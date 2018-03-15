@@ -90,8 +90,9 @@ void setup()
 
 void loop() 
 {
-  if (Serial.available() >= 2)
+  if (Serial.available() >= 3)
   {
+	int command = Serial.read();
     int alertId = Serial.read();
     int level = Serial.read();
     if (alertId == 0)

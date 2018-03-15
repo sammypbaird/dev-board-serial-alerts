@@ -64,7 +64,8 @@ void setup() {
 }
 
 void serialEvent(){
-  while(Serial.available() >= 2){
+  while(Serial.available() >= 3){
+    byte command = Serial.read();
     byte thisAlert = Serial.read();  
     byte thisLevel = Serial.read();
     alertValues[thisAlert] = thisLevel;

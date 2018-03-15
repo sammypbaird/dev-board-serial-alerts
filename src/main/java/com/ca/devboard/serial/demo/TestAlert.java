@@ -10,7 +10,7 @@ public class TestAlert
 
 	private static void sendCommand(SerialIO serialIo, int alertId, int level) throws IOException, InterruptedException
 	{
-		serialIo.sendCommand(alertId, level);
+		serialIo.sendAlert(alertId, level);
 		System.out.println("Alert " + alertId + ", level " + level);
 	}
 

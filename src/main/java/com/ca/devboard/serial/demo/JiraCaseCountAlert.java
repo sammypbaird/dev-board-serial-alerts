@@ -35,8 +35,8 @@ public class JiraCaseCountAlert
 
 			try
 			{
-				serialIo.sendCommand(0, numUnassignedOpenCases);
-				serialIo.sendCommand(1, numUnassignedCriticalCases);
+				serialIo.sendAlert(0, numUnassignedOpenCases);
+				serialIo.sendAlert(1, numUnassignedCriticalCases);
 			}
 			catch (IOException ex)
 			{
